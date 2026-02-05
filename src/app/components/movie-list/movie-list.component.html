@@ -1,0 +1,166 @@
+<div class="max-w-7xl mx-auto p-8">
+  <div class="">
+    <h1 class="text-3xl font-bold text-gray-800">Welcome back to the Hall of Great Films</h1>
+    <p class="text-gray-500 mb-6">
+      Manage your movie collection with ease. Add, edit, or delete movies and keep your list up to
+      date!
+    </p>
+  </div>
+  <div class="flex gap-8 justify-between">
+    <div class="w-full bg-white py-4 px-6 rounded-lg border border-gray-100 mb-5">
+      <div class="border-b border-gray-100 mb-2 pb-1">
+        <h3 class="text-gray-500 text-sm">Total movies</h3>
+        <h1 class="font-semibold mt-2 text-cyan-600 text-4xl">{{ stats()?.totalMovies || 0 }}</h1>
+      </div>
+      <div class="flex gap-8">
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm mb-1 before:w-1.5 before:h-1.5 before:bg-cyan-600 before:absolute before:-left-2 before:top-1.5 ms-2 ps-1 before:rounded-full relative">Spanning</span>
+          <span class="text-cyan-600 font-semibold text-2xl">{{ stats()?.totalGenres || 0 }}<span class="text-gray-500 font-normal text-xs ps-1">genres</span></span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm mb-1 before:w-1.5 before:h-1.5 before:bg-cyan-600 before:absolute before:-left-2 before:top-1.5 ms-2 ps-1 before:rounded-full relative">{{ stats()?.topGenre || 'N/A' }}</span>
+          <span class="text-cyan-600 font-semibold text-2xl">{{ stats()?.topGenreCount || 0 }}<span class="text-gray-500 font-normal text-xs ps-1">movies</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="w-full bg-white py-4 px-6 rounded-lg border border-gray-100 mb-5">
+      <div class="border-b border-gray-100 mb-2 pb-1">
+        <h3 class="text-gray-500 text-sm">Average Rating</h3>
+        <h1 class="font-semibold mt-2 text-cyan-600 text-4xl">{{ stats()?.averageRating?.toFixed(2) || '0.00' }}</h1>
+      </div>
+      <div class="flex gap-8">
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm mb-1 before:w-1.5 before:h-1.5 before:bg-cyan-600 before:absolute before:-left-2 before:top-1.5 ms-2 ps-1 before:rounded-full relative">Highest Rated</span>
+          <span class="flex items-baseline text-cyan-600 font-semibold text-2xl">{{ stats()?.highestRating || 0 }}<span class="text-gray-500 font-normal text-xs ps-1"><lucide-icon [img]="StarIcon" [size]="12" /></span></span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm mb-1 before:w-1.5 before:h-1.5 before:bg-cyan-600 before:absolute before:-left-2 before:top-1.5 ms-2 ps-1 before:rounded-full relative">Lowest Rated</span>
+          <span class="flex items-baseline text-cyan-600 font-semibold text-2xl">{{ stats()?.lowestRating || 0 }}<span class="text-gray-500 font-normal text-xs ps-1"><lucide-icon [img]="StarIcon" [size]="12" /></span></span>
+        </div>
+      </div>
+    </div>
+    <div class="w-full bg-white py-4 px-6 rounded-lg border border-gray-100 mb-5">
+      <div class="border-b border-gray-100 mb-2 pb-1">
+        <h3 class="text-gray-500 text-sm">Total Directors</h3>
+        <h1 class="font-semibold mt-2 text-cyan-600 text-4xl">{{ stats()?.totalDirectors || 0 }}</h1>
+      </div>
+      <div class="flex gap-8">
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm mb-1 before:w-1.5 before:h-1.5 before:bg-cyan-600 before:absolute before:-left-2 before:top-1.5 ms-2 ps-1 before:rounded-full relative">Most Featured Director</span>
+          <span class="text-cyan-600 font-semibold text-xl">{{ stats()?.mostFeaturedDirector || 'N/A' }}</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm mb-1 before:w-1.5 before:h-1.5 before:bg-cyan-600 before:absolute before:-left-2 before:top-1.5 ms-2 ps-1 before:rounded-full relative">Total Movies</span>
+          <span class="text-cyan-600 font-semibold text-2xl">{{ stats()?.mostFeaturedDirectorCount || 0 }}<span class="text-gray-500 font-normal text-xs ps-1">movies</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-between mb-5 gap-8">
+    <div class="max-w-96 w-full">
+      <app-form-input
+        [label]="''"
+        [id]="'search'"
+        [control]="searchControl"
+        [placeholder]="'Search movie'"
+        [icon]="SearchIcon"
+      />
+    </div>
+    <button
+      class="bg-cyan-600 flex items-center gap-2 hover:bg-cyan-500 cursor-pointer text-white font-medium px-4 py-2 rounded-lg transition-colors"
+      (click)="createMovie()"
+    >
+      <span><lucide-icon [img]="PlusIcon" [size]="18" /></span>
+      New Movie
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-12 text-xl text-gray-600">Loading movies...</div>
+  }
+
+  @if (error()) {
+    <div class="bg-red-50 text-red-600 text-center py-4 px-6 rounded-lg mb-6">{{ error() }}</div>
+  }
+
+  @if (!loading() && movies().length === 0) {
+    <div class="text-center py-12 text-xl text-gray-600">
+      <p>No movies found. Start by adding your first movie!</p>
+    </div>
+  }
+
+  @if (!loading() && movies().length > 0) {
+    <table class="w-full bg-white overflow-clip border rounded-lg border-gray-300">
+      <tr>
+        <th class="py-2 font-medium text-gray-500 text-sm text-left px-6">Title</th>
+        <th class="py-2 font-medium text-gray-500 text-sm text-left px-6">Director</th>
+        <th class="py-2 font-medium text-gray-500 text-sm text-left px-6">Genre</th>
+        <th class="py-2 font-medium text-gray-500 text-sm text-left px-6">Release Year</th>
+        <th class="py-2 font-medium text-gray-500 text-sm text-left px-6">Rating</th>
+        <th></th>
+      </tr>
+      @for (movie of movies(); track movie.id) {
+        <tr class="odd:bg-white even:bg-gray-50">
+          <td class="py-3 font-medium text-gray-900 text-base text-left px-6">
+            <span class="font-normal text-gray-300">#{{ movie.id }}</span> {{ movie.title }}
+          </td>
+          <td class="py-3 font-normal text-gray-900 text-base text-left px-6">
+            {{ movie.director }}
+          </td>
+          <td class="py-3 font-normal text-gray-800 text-base text-left px-6">{{ movie.genre }}</td>
+          <td class="py-3 font-normal text-gray-800 text-base text-left px-6">
+            {{ movie.releaseYear }}
+          </td>
+          <td class="py-3 font-medium text-cyan-600 text-base text-left px-6">
+            {{ movie.rating }}
+          </td>
+          <td class="py-3 font-normal text-gray-800 text-base text-left px-6">
+            <div class="flex gap-2">
+              <button
+                class="text-gray-400 p-2 rounded cursor-pointer hover:bg-gray-100 duration-300"
+                (click)="editMovie(movie.id)"
+                title="Edit movie"
+              >
+                <lucide-icon [img]="PencilIcon" [size]="18" />
+              </button>
+              <button
+                class="text-gray-400 p-2 rounded cursor-pointer hover:bg-gray-100 duration-300"
+                (click)="deleteMovie({ id: movie.id, title: movie.title })"
+                title="Delete movie"
+              >
+                <lucide-icon [img]="TrashIcon" [size]="18" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </table>
+  }
+</div>
+
+<!-- Movie Modal -->
+<app-movie-modal
+  [isOpen]="modalOpen()"
+  [movieId]="editingMovieId()"
+  [movieData]="editingMovieData()"
+  [loading]="modalLoading()"
+  (close)="closeModal()"
+  (save)="saveMovie($event)"
+/>
+
+<!-- Delete Confirmation Modal -->
+<app-confirm-modal
+  [isOpen]="deleteConfirmOpen()"
+  [title]="'Delete Movie'"
+  [message]="
+    'Are you sure you want to delete &quot;' +
+    (movieToDelete()?.title || '') +
+    '&quot;? This action cannot be undone.'
+  "
+  [confirmText]="'Delete'"
+  [cancelText]="'Cancel'"
+  [confirmButtonClass]="'bg-red-500 hover:bg-red-600'"
+  [loading]="deleteLoading()"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()"
+/>

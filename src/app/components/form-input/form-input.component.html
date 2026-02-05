@@ -1,0 +1,28 @@
+<div [class.mb-5]="label()">
+  @if (label()) {
+    <label [for]="id()" class="block mb-2 font-medium text-gray-800">{{ label() }}</label>
+  }
+  <div class="relative">
+    @if (icon()) {
+      <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+        <lucide-icon [img]="icon()" [size]="18" />
+      </div>
+    }
+    <input
+      [type]="type()"
+      [id]="id()"
+      [formControl]="control()"
+      [placeholder]="placeholder()"
+      [min]="min()"
+      [max]="max()"
+      [step]="step()"
+      class="w-full px-4 py-2 border border-gray-50 rounded-lg transition-colors bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+      [class.pl-10]="icon()"
+      [class.border-gray-300]="!isInvalid"
+      [class.border-red-500]="isInvalid"
+    />
+  </div>
+  @if (isInvalid && errorMessage()) {
+    <span class="block text-red-500 text-sm mt-1">{{ errorMessage() }}</span>
+  }
+</div>

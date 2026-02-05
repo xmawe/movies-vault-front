@@ -1,0 +1,49 @@
+@if (isOpen()) {
+  <div
+    class="fixed inset-0 bg-black/10 backdrop-blur-sm  bg-opacity-50 flex items-center justify-center z-50 p-4"
+    (click)="onBackdropClick($event)"
+  >
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+      <!-- Header -->
+      <div class="flex items-start gap-4 p-6">
+        <div class="shrink-0 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+          <lucide-icon [img]="AlertIcon" [size]="24" class="text-red-600" />
+        </div>
+        <div class="flex-1">
+          <div class="flex justify-between items-start">
+            <h3 class="text-lg font-semibold text-gray-900">{{ title() }}</h3>
+            <button
+              class="text-gray-400 hover:text-gray-600 transition-colors"
+              (click)="onCancel()"
+              type="button"
+              [disabled]="loading()"
+            >
+              <lucide-icon [img]="XIcon" [size]="20" />
+            </button>
+          </div>
+          <p class="mt-2 text-sm text-gray-600">{{ message() }}</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-3 justify-end px-6 pb-6">
+        <button
+          type="button"
+          class="cursor-pointer px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+          (click)="onCancel()"
+          [disabled]="loading()"
+        >
+          {{ cancelText() }}
+        </button>
+        <button
+          type="button"
+          [class]="confirmButtonClass() + 'cursor-pointer text-white px-6 py-2 rounded-lg transition-colors font-medium disabled:opacity-60 disabled:cursor-not-allowed'"
+          (click)="onConfirm()"
+          [disabled]="loading()"
+        >
+          {{ loading() ? 'Processing...' : confirmText() }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

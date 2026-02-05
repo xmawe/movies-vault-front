@@ -1,0 +1,98 @@
+@if (isOpen()) {
+  <div
+    class="fixed inset-0 bg-black/10 backdrop-blur-sm  bg-opacity-50 flex items-center justify-center z-50 p-4"
+    (click)="onBackdropClick($event)"
+  >
+    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <!-- Header -->
+      <div class="flex justify-between items-center p-6 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-800">
+          {{ movieId() ? 'Edit Movie' : 'Add New Movie' }}
+        </h2>
+        <button
+          class="text-gray-400 hover:text-gray-600 transition-colors"
+          (click)="onClose()"
+          type="button"
+        >
+          <lucide-icon [img]="XIcon" [size]="24" />
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="movieForm" (ngSubmit)="onSubmit()" class="p-6">
+        <app-form-input
+          [label]="'Title *'"
+          [id]="'title'"
+          [control]="getControl('title')"
+          [placeholder]="'Enter movie title'"
+          [errorMessage]="getFieldError('title')"
+          [icon]="FilmIcon"
+        />
+
+        <app-form-input
+          [label]="'Director *'"
+          [id]="'director'"
+          [control]="getControl('director')"
+          [placeholder]="'Enter director name'"
+          [errorMessage]="getFieldError('director')"
+          [icon]="UserIcon"
+        />
+
+        <app-form-input
+          [label]="'Genre *'"
+          [id]="'genre'"
+          [control]="getControl('genre')"
+          [placeholder]="'Enter genre (e.g., Drama, Action)'"
+          [errorMessage]="getFieldError('genre')"
+          [icon]="TagIcon"
+        />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <app-form-input
+            [label]="'Release Year *'"
+            [id]="'releaseYear'"
+            [type]="'number'"
+            [control]="getControl('releaseYear')"
+            [placeholder]="'2024'"
+            [min]="1888"
+            [max]="2100"
+            [errorMessage]="getFieldError('releaseYear')"
+            [icon]="CalendarIcon"
+          />
+
+          <app-form-input
+            [label]="'Rating (0-10) *'"
+            [id]="'rating'"
+            [type]="'number'"
+            [control]="getControl('rating')"
+            [placeholder]="'8.5'"
+            [min]="0"
+            [max]="10"
+            [step]="0.1"
+            [errorMessage]="getFieldError('rating')"
+            [icon]="StarIcon"
+          />
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-3 justify-end pt-4 border-t border-gray-200">
+          <button
+            type="button"
+            class="cursor-pointer px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            (click)="onClose()"
+            [disabled]="loading()"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="cursor-pointer px-6 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors font-medium disabled:opacity-60 disabled:cursor-not-allowed"
+            [disabled]="loading()"
+          >
+            {{ loading() ? 'Saving...' : (movieId() ? 'Update Movie' : 'Create Movie') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
