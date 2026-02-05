@@ -9,10 +9,11 @@ import { MovieStats } from '../../models/movie-stats.model';
 import { MovieModalComponent } from '../movie-modal/movie-modal.component';
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 import { FormInputComponent } from '../form-input/form-input.component';
+import { DashboardMetricsComponent } from "../dashobard-metrics/dasuboard-metrics.component";
 
 @Component({
   selector: 'app-movie-list',
-  imports: [LucideAngularModule, CommonModule, MovieModalComponent, ConfirmModalComponent, FormInputComponent, ReactiveFormsModule],
+  imports: [LucideAngularModule, CommonModule, MovieModalComponent, ConfirmModalComponent, FormInputComponent, ReactiveFormsModule, DashboardMetricsComponent],
   templateUrl: './movie-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
