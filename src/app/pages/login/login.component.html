@@ -1,0 +1,45 @@
+<main class="flex min-h-screen">
+  <div class="bg-white h-fit w-full max-w-96 m-auto flex flex-col gap-8 p-6 rounded-lg border-gray-200 border shadow-xs">
+    <div class="">
+      <h1 class="font-semibold text-cyan-600 text-2xl">Login</h1>
+      <h2 class="text-gray-600 text-sm">Welcome back!</h2>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      @if (errorMessage()) {
+        <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+          {{ errorMessage() }}
+        </div>
+      }
+      <app-form-input
+        [label]="'Email *'"
+        [id]="'email'"
+        [control]="getControl('email')"
+        [placeholder]="'user@email.com'"
+        [errorMessage]="getFieldError('email')"
+        [icon]="AtSignIcon"
+      />
+      <app-form-input
+        [label]="'Password *'"
+        [id]="'password'"
+        [control]="getControl('password')"
+        [placeholder]="'********'"
+        [errorMessage]="getFieldError('password')"
+        [password]="true"
+        [icon]="LockIcon"
+      />
+      <button
+            type="submit"
+            [disabled]="isLoading()"
+            class="cursor-pointer w-full px-6 py-2 bg-cyan-600 hover:bg-cyan-500 duration-300 text-white rounded-lg transition-colors font-medium disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            @if (isLoading()) {
+              <span>Loading...</span>
+            } @else {
+              <span>Sign in</span>
+            }
+          </button>
+          <p class="font-normal text-xs text-center text-gray-500 mt-4" >You don't have an account? <a class="text-cyan-600 font-medium hover:underline duration-300" href="/register">Create one</a></p>
+    </form>
+  </div>
+</main>

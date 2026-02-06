@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { MovieService } from '../../services/movie.service';
-import { LucideAngularModule, Pencil, Trash2, Search, Plus, Star } from 'lucide-angular';
+import { AuthService } from '../../services/auth.service';
+import { LucideAngularModule, Pencil, Trash2, Search, Plus, Star, LogOut } from 'lucide-angular';
 import { Movie } from '../../models/movie.model';
 import { MovieStats } from '../../models/movie-stats.model';
 import { MovieModalComponent } from '../movie-modal/movie-modal.component';
@@ -19,6 +20,7 @@ import { DashboardMetricsComponent } from "../dashobard-metrics/dasuboard-metric
 })
 export class MovieListComponent implements OnInit {
   private readonly movieService = inject(MovieService);
+  protected readonly authService = inject(AuthService);
 
   protected readonly movies = signal<Movie[]>([]);
   protected readonly stats = signal<MovieStats | null>(null);
@@ -37,6 +39,7 @@ export class MovieListComponent implements OnInit {
   protected readonly SearchIcon = Search;
   protected readonly PlusIcon = Plus;
   protected readonly StarIcon = Star;
+  protected readonly LogOutIcon = LogOut;
 
   constructor() {
     // Setup search with debounce
