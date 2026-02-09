@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, PLATFORM_ID } from '@angular/core';
+import { Injectable, inject, signal, PLATFORM_ID, afterNextRender } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -18,8 +18,16 @@ export class AuthService {
   private readonly USER_KEY = 'auth_user';
   
   // Signal to track authentication state
-  readonly isAuthenticated = signal<boolean>(this.hasToken());
-  readonly currentUser = signal<User | null>(this.getStoredUser());
+  readonly isAuthenticated = signal<boolean>(false);
+  readonly currentUser = signal<User | null>(null);
+
+  constructor() {
+    // Initialize auth state after rendering on the client
+    afterNextRender(() => {
+      this.isAuthenticated.set(this.hasToken());
+      this.currentUser.set(this.getStoredUser());
+    });
+  }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
